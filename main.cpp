@@ -1,3 +1,10 @@
+/**
+ * @file main.cpp
+ * @brief Основной файл программы для анализа функции отклика границы с использованием OpenGL и ImGui.
+ *
+ * Этот файл содержит функцию main, которая инициализирует контекст OpenGL, запускает цикл обработки событий и отображает интерфейс пользователя с помощью ImGui.
+ */
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <imgui.h>
@@ -20,6 +27,13 @@ GLuint vao, vbo;
 bool showOriginalImage = true;
 std::string outputMessage;
 
+/**
+ * @brief Загрузка шейдеров и создание программы.
+ *
+ * @param vertex_file_path Путь к файлу с вершинным шейдером.
+ * @param fragment_file_path Путь к файлу с фрагментным шейдером.
+ * @return Идентификатор OpenGL программы.
+ */
 GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path) {
     // Create the shaders
     GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
@@ -106,6 +120,13 @@ GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path)
     return ProgramID;
 }
 
+/**
+ * @brief Главная функция программы.
+ *
+ * Инициализирует GLFW, GLEW и ImGui, загружает шейдеры и запускает главный цикл обработки событий и рендеринга.
+ *
+ * @return Код завершения программы (0 - успешное завершение, -1 - ошибка).
+ */
 int main() {
     // Initialize GLFW
     if (!glfwInit()) {
