@@ -35,11 +35,11 @@ std::string outputMessage;
  * @return Идентификатор OpenGL программы.
  */
 GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path) {
-    // Create the shaders
+    // Создаем шейдеры
     GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
     GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
 
-    // Read the Vertex Shader code from the file
+    // Чтение кода вершинного шейдера из файла
     std::string VertexShaderCode;
     std::ifstream VertexShaderStream(vertex_file_path, std::ios::in);
     if(VertexShaderStream.is_open()){
@@ -48,11 +48,11 @@ GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path)
         VertexShaderCode = sstr.str();
         VertexShaderStream.close();
     }else{
-        std::cerr << "Unable to open " << vertex_file_path << std::endl;
+        std::cerr << "Не удалось открыть " << vertex_file_path << std::endl;
         return 0;
     }
 
-    // Read the Fragment Shader code from the file
+    // Чтение кода фрагментного шейдера из файла
     std::string FragmentShaderCode;
     std::ifstream FragmentShaderStream(fragment_file_path, std::ios::in);
     if(FragmentShaderStream.is_open()){
@@ -61,19 +61,19 @@ GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path)
         FragmentShaderCode = sstr.str();
         FragmentShaderStream.close();
     }else{
-        std::cerr << "Unable to open " << fragment_file_path << std::endl;
+        std::cerr << "Не удалось открыть " << fragment_file_path << std::endl;
         return 0;
     }
 
     GLint Result = GL_FALSE;
     int InfoLogLength;
 
-    // Compile Vertex Shader
+    // Компиляция вершинного шейдера
     char const * VertexSourcePointer = VertexShaderCode.c_str();
     glShaderSource(VertexShaderID, 1, &VertexSourcePointer , NULL);
     glCompileShader(VertexShaderID);
 
-    // Check Vertex Shader
+    // Проверка вершинного шейдера
     glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &Result);
     glGetShaderiv(VertexShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
     if ( InfoLogLength > 0 ){
@@ -82,12 +82,12 @@ GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path)
         std::cerr << &VertexShaderErrorMessage[0] << std::endl;
     }
 
-    // Compile Fragment Shader
+    // Компиляция фрагментного шейдера
     char const * FragmentSourcePointer = FragmentShaderCode.c_str();
     glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer , NULL);
     glCompileShader(FragmentShaderID);
 
-    // Check Fragment Shader
+    // Проверка фрагментного шейдера
     glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &Result);
     glGetShaderiv(FragmentShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
     if ( InfoLogLength > 0 ){
@@ -96,13 +96,13 @@ GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path)
         std::cerr << &FragmentShaderErrorMessage[0] << std::endl;
     }
 
-    // Link the program
+    // Линковка программы
     GLuint ProgramID = glCreateProgram();
     glAttachShader(ProgramID, VertexShaderID);
     glAttachShader(ProgramID, FragmentShaderID);
     glLinkProgram(ProgramID);
 
-    // Check the program
+    // Проверка программы
     glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
     glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
     if ( InfoLogLength > 0 ){
@@ -128,36 +128,36 @@ GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path)
  * @return Код завершения программы (0 - успешное завершение, -1 - ошибка).
  */
 int main() {
-    // Initialize GLFW
+    // Инициализация GLFW
     if (!glfwInit()) {
-        std::cerr << "Failed to initialize GLFW\n";
+        std::cerr << "Не удалось инициализировать GLFW\n";
         return -1;
     }
 
-    // Create a window
+    // Создание окна
     window = glfwCreateWindow(1280, 720, "Edge Response Function Analyzer", NULL, NULL);
     if (window == NULL) {
-        std::cerr << "Failed to open GLFW window\n";
+        std::cerr << "Не удалось открыть окно GLFW\n";
         glfwTerminate();
         return -1;
     }
 
     glfwMakeContextCurrent(window);
-    glfwSwapInterval(1); // Enable vsync
+    glfwSwapInterval(1); // Включение вертикальной синхронизации
 
-    // Initialize GLEW
+    // Инициализация GLEW
     if (glewInit() != GLEW_OK) {
-        std::cerr << "Failed to initialize GLEW\n";
+        std::cerr << "Не удалось инициализировать GLEW\n";
         return -1;
     }
 
-    // Print OpenGL information
-    std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
-    std::cout << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
-    std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
-    std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
+    // Вывод информации об OpenGL
+    std::cout << "Версия OpenGL: " << glGetString(GL_VERSION) << std::endl;
+    std::cout << "Версия GLSL: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+    std::cout << "Производитель: " << glGetString(GL_VENDOR) << std::endl;
+    std::cout << "Рендерер: " << glGetString(GL_RENDERER) << std::endl;
 
-    // Setup ImGui
+    // Настройка ImGui
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -165,10 +165,10 @@ int main() {
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 130");
 
-    // Load shaders
+    // Загрузка шейдеров
     programID = LoadShaders("VertexShader.glsl", "FragmentShader.glsl");
 
-    // Create VAO and VBO for image display
+    // Создание VAO и VBO для отображения изображения
     float vertices[] = {
         -1.0f, -1.0f, 0.0f, 0.0f,
          1.0f, -1.0f, 1.0f, 0.0f,
@@ -190,53 +190,53 @@ int main() {
     int synthHeight = 500;
     int synthRadius = 200;
 
-    // Main loop
+    // Основной цикл
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
 
-        // Start the ImGui frame
+        // Начало нового кадра ImGui
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        // Create interface
-        ImGui::Begin("Control Panel");
+        // Создание интерфейса
+        ImGui::Begin("Панель управления");
         
-        if (ImGui::Button("Generate Test Image")) {
+        if (ImGui::Button("Сгенерировать тестовое изображение")) {
             GenerateTestImage();
         }
         
-        if (ImGui::Button("Load Image")) {
+        if (ImGui::Button("Загрузить изображение")) {
             LoadImage();
         }
         
-        if (ImGui::Button("Calculate Response Function")) {
+        if (ImGui::Button("Рассчитать функцию отклика")) {
             CalculateResponseFunction();
         }
         
-        if (ImGui::Button("Apply Edge Enhancement")) {
+        if (ImGui::Button("Применить улучшение границ")) {
             ApplyEdgeEnhancement();
         }
 
-        if (ImGui::Button("Calculate Noise Level")) {
+        if (ImGui::Button("Рассчитать уровень шума")) {
             double noiseLevel = CalculateNoiseLevel(currentImage);
-            outputMessage = "Noise Level: " + std::to_string(noiseLevel);
+            outputMessage = "Уровень шума: " + std::to_string(noiseLevel);
         }
 
-        if (ImGui::Button("Calculate CNR")) {
+        if (ImGui::Button("Рассчитать CNR")) {
             cv::Rect roi(100, 100, 100, 100);
             double cnr = CalculateCNR(currentImage, roi);
             outputMessage = "CNR: " + std::to_string(cnr);
         }
         
-        ImGui::Checkbox("Show Original Image", &showOriginalImage);
+        ImGui::Checkbox("Показать оригинальное изображение", &showOriginalImage);
 
         ImGui::Separator();
-        ImGui::Text("Synthesize Test Image");
-        ImGui::InputInt("Width", &synthWidth);
-        ImGui::InputInt("Height", &synthHeight);
-        ImGui::InputInt("Circle Radius", &synthRadius);
-        if (ImGui::Button("Synthesize")) {
+        ImGui::Text("Синтезировать тестовое изображение");
+        ImGui::InputInt("Ширина", &synthWidth);
+        ImGui::InputInt("Высота", &synthHeight);
+        ImGui::InputInt("Радиус окружности", &synthRadius);
+        if (ImGui::Button("Синтезировать")) {
             SynthesizeTestImage(synthWidth, synthHeight, synthRadius);
         }
 
@@ -245,29 +245,29 @@ int main() {
 
         ImGui::End();
 
-        // Rendering
+        // Рендеринг
         glClear(GL_COLOR_BUFFER_BIT);
 
         if (showOriginalImage && !currentImage.empty()) {
             RenderImage();
         } else {
-            std::cout << "Image not displayed: " 
-                      << (showOriginalImage ? "display on" : "display off")
+            std::cout << "Изображение не отображается: " 
+                      << (showOriginalImage ? "отображение включено" : "отображение выключено")
                       << ", " 
-                      << (currentImage.empty() ? "image empty" : "image loaded") 
+                      << (currentImage.empty() ? "изображение отсутствует" : "изображение загружено") 
                       << std::endl;
         }
 
         RenderResponseFunction();
 
-        // Render ImGui
+        // Рендеринг ImGui
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         glfwSwapBuffers(window);
     }
 
-    // Cleanup
+    // Очистка
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
